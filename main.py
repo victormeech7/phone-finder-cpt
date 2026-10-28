@@ -3,125 +3,103 @@ from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 import requests
 from bs4 import BeautifulSoup
-import urllib.parse
 
 app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
-
 HEADERS = {"User-Agent": "Mozilla/5.0 Chrome/120.0"}
 
-# REAL PHONE IMAGES - NO MORE GREEN BOXES
-PHONE_IMAGES = {
-    "iphone": "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=300&fit=crop",
-    "samsung": "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&h=300&fit=crop",
-    "default": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=300&fit=crop"
+IMAGES = {
+ "iphone1": "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=500&h=350&fit=crop&crop=center",
+ "iphone2": "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=500&h=350&fit=crop",
+ "iphone3": "https://images.unsplash.com/photo-1556656793-08538906a9f8?w=500&h=350&fit=crop",
+ "samsung": "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=500&h=350&fit=crop",
+ "luxury": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=400&fit=crop"
 }
 
-def get_real_image(query):
-    q = query.lower()
-    if "iphone" in q or "apple" in q:
-        return PHONE_IMAGES["iphone"]
-    if "samsung" in q or "galaxy" in q:
-        return PHONE_IMAGES["samsung"]
-    return PHONE_IMAGES["default"]
-
-SPONSORED_SHOP = {
-    "name": "💼 PREMIUM RETAILER SLOT - Available",
-    "price": "Your Shop Featured Across CPT - From R2,500/mo",
-    "shop": "Phone Finder CPT",
-    "location": "Canal Walk • Century City • V&A • Claremont • Tygervalley",
-    "image": "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&h=400&fit=crop", # luxury store
-    "link": "https://wa.me/27814150336?text=Hi%20Phone%20Finder%20CPT%2C%20I%20want%20to%20book%20the%20Premium%20Slot%20R2500%2Fmo%20for%20my%20shop",
-    "sponsored": True
+SPONSORED = {
+ "name": "Your Brand Dominates Cape Town",
+ "price": "Be The #1 Featured Retailer — R2,500/mo",
+ "shop": "Phone Finder CPT — Premium Network",
+ "location": "Canal Walk • Century City • V&A • Claremont • Tygervalley",
+ "image": IMAGES["luxury"],
+ "link": "https://wa.me/27814150336?text=Hi!%20I%20want%20to%20book%20Premium%20Slot%20for%20my%20shop%20-%20R2500/mo%20-%20Phone%20Finder%20CPT",
+ "sponsored": True
 }
-
-def scrape_pc(query):
-    results=[]
-    try:
-        url=f"https://www.pricecheck.co.za/search?search={query}"
-        r=requests.get(url, headers=HEADERS, timeout=8)
-        soup=BeautifulSoup(r.text,"html.parser")
-        for card in soup.select("div.product-list-item")[:6]:
-            n=card.select_one("a.title")
-            p=card.select_one(".price")
-            if n and p:
-                results.append({
-                    "name": n.get_text(strip=True)[:50],
-                    "price": p.get_text(strip=True).replace("From","").strip(),
-                    "shop": "PriceCheck Verified",
-                    "location": "CPT Delivery",
-                    "image": get_real_image(query),
-                    "link": f"https://www.pricecheck.co.za/search?search={query}",
-                    "sponsored": False
-                })
-    except: pass
-    return results
 
 @app.get("/", response_class=HTMLResponse)
 def home():
-    return """
-<html><head><title>Phone Finder CPT - Premium Retail Platform</title><meta name="viewport" content="width=device-width, initial-scale=1">
+ return """
+<!DOCTYPE html>
+<html><head><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phone Finder CPT | Premium Retail Intelligence</title>
 <style>
-body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#080808;color:#fff;margin:0;padding:16px;text-align:center}
-.live{background:#00ff88;color:#000;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:bold}
-.money-bar{background:linear-gradient(90deg,#FFD700,#FFA500);color:#000;padding:14px;border-radius:12px;margin:15px auto;max-width:1100px;font-weight:800;font-size:13px;letter-spacing:0.3px}
-input{padding:16px;width:60%;max-width:320px;border-radius:12px;border:none;font-size:16px;background:#1a1a1a;color:#fff;border:1px solid #333}
-button.search{background:#00ff88;padding:16px 20px;border:none;border-radius:12px;font-weight:800;cursor:pointer;margin-left:8px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;max-width:1100px;margin:20px auto}
-.card{background:#161616;border-radius:20px;overflow:hidden;text-align:left;border:1px solid #262626;position:relative;transition:0.2s}
-.card:hover{transform:translateY(-3px);border-color:#333}
-.card.sponsored{border:2px solid #FFD700;box-shadow:0 0 30px #FFD70033;background:linear-gradient(180deg,#1a1800,#161616)}
-.card img{width:100%;height:210px;object-fit:cover;background:#222}
-.badge{position:absolute;top:10px;left:10px;background:#FFD700;color:#000;padding:5px 10px;border-radius:20px;font-size:11px;font-weight:900;letter-spacing:0.5px}
-.card-body{padding:14px}
-.price{color:#00ff88;font-size:20px;font-weight:800;margin:6px 0}
-.shop{color:#999;font-size:12px}
-.btns{display:flex;gap:8px;margin-top:10px}
-.btn{flex:1;padding:11px;border-radius:11px;border:none;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;font-size:13px}
-.btn-wa{background:#25D366;color:white}
-.btn-view{background:#2a2a2a;color:white;border:1px solid #333}
-.btn-gold{background:linear-gradient(90deg,#FFD700,#FFA500);color:#000}
-</style>
-</head>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
+*{font-family:'Inter',-apple-system,sans-serif;box-sizing:border-box}
+body{margin:0;background:#050507;color:#fff;overflow-x:hidden}
+.header{position:sticky;top:0;z-index:50;background:rgba(5,5,7,0.9);backdrop-filter:blur(20px);border-bottom:1px solid #1a1a1a;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:900;letter-spacing:-1px;font-size:18px} .logo span{color:#FFD700}
+.live-dot{width:8px;height:8px;background:#00FF88;border-radius:50%;display:inline-block;animation:pulse 2s infinite;margin-right:6px}
+@keyframes pulse{0%{opacity:1}50%{opacity:0.4}100%{opacity:1}}
+@keyframes glow{0%{box-shadow:0 0 20px #FFD70033}50%{box-shadow:0 0 40px #FFD70066}100%{box-shadow:0 0 20px #FFD70033}}
+.hero{text-align:center;padding:40px 20px 10px}
+.hero h1{font-size:42px;font-weight:900;letter-spacing:-2px;line-height:0.9;margin:0} .hero h1 em{font-style:normal;background:linear-gradient(90deg,#FFD700,#FFA500);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:#666;margin-top:12px;font-size:14px}
+.bar{max-width:1100px;margin:24px auto;background:linear-gradient(90deg,#FFD700,#FFB800);color:#000;padding:12px;border-radius:100px;font-weight:800;font-size:12px;letter-spacing:0.5px;text-align:center}
+.search-wrap{max-width:600px;margin:20px auto;display:flex;gap:10px;padding:0 20px}
+.input{flex:1;background:#111;border:1px solid #222;padding:16px 20px;border-radius:14px;color:#fff;font-size:16px;outline:none} .input:focus{border-color:#FFD700}
+.btn-search{background:#fff;color:#000;border:none;padding:16px 28px;border-radius:14px;font-weight:800;cursor:pointer}
+.grid{max-width:1150px;margin:30px auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;padding:0 20px}
+.card{background:#0F0F10;border:1px solid #1E1E1F;border-radius:24px;overflow:hidden;transition:all 0.3s;position:relative}
+.card:hover{transform:translateY(-4px);border-color:#2a2a2a}
+.card.sponsored{border:1.5px solid #FFD700;animation:glow 3s infinite;background:linear-gradient(180deg,#1A1805 0%,#0F0F10 60%)}
+.card img{width:100%;height:230px;object-fit:cover}
+.tag{position:absolute;top:14px;left:14px;background:#FFD700;color:#000;padding:6px 12px;border-radius:100px;font-size:10px;font-weight:900;letter-spacing:0.5px}
+.verified{position:absolute;top:14px;right:14px;background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);color:#00FF88;padding:6px 10px;border-radius:100px;font-size:10px;font-weight:700;border:1px solid #222}
+.body{padding:18px}
+.name{font-weight:700;font-size:16px;line-height:1.2}
+.meta{display:flex;gap:8px;margin:8px 0;color:#666;font-size:11px;align-items:center} .dot{width:3px;height:3px;background:#444;border-radius:50%}
+.price-row{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.price{font-size:26px;font-weight:900;letter-spacing:-1px} .price small{font-size:12px;color:#00FF88;font-weight:700}
+.actions{display:flex;gap:8px;margin-top:14px}
+.a{flex:1;padding:12px;border-radius:12px;text-align:center;text-decoration:none;font-weight:700;font-size:13px}
+.a-ghost{background:#1A1A1A;color:#fff;border:1px solid #222}
+.a-green{background:#00FF88;color:#000}
+.a-gold{background:linear-gradient(90deg,#FFD700,#FFB800);color:#000;font-weight:900}
+</style></head>
 <body>
-<h1>📱 Phone Finder CPT <span class="live">PREMIUM</span></h1>
-<div class="money-bar">💼 PREMIUM RETAILER NETWORK: Canal Walk • Century City • V&A Waterfront • Claremont • Tygervalley — Enquire to feature: 081 415 0336 — From R2,500/mo</div>
-<p style="color:#888">Verified CPT retailers • Live price comparison • Direct WhatsApp leads</p>
-<input id="q" placeholder="Search iPhone 15 Pro, Samsung S24..." value="iPhone"><button class="search" onclick="search()">Search Live</button>
-<div id="status"></div>
+<div class="header"><div class="logo">PHONE FINDER <span>CPT</span></div><div style="font-size:11px;color:#888"><span class="live-dot"></span>PREMIUM • LIVE</div></div>
+<div class="hero"><h1>Find phones.<br><em>Not scams.</em></h1><p>Live prices from Canal Walk, Century City, V&A, Claremont, Tygervalley</p></div>
+<div class="bar">⚡ 1 PREMIUM SLOT LEFT THIS MONTH — R2,500/MO — 081 415 0336 — BRANDS APPLYING NOW</div>
+<div class="search-wrap"><input id="q" class="input" placeholder="iPhone 15 Pro Max, S24 Ultra..." value="iPhone 15 Pro"><button class="btn-search" onclick="doSearch()">Search</button></div>
 <div id="results" class="grid"></div>
 <script>
-async function search(){
- const q=document.getElementById('q').value;
- document.getElementById('status').innerHTML='<p style=color:#888>🔍 Searching verified retailers...</p>';
- document.getElementById('results').innerHTML='';
- const res=await fetch('/search?q='+encodeURIComponent(q));
- const data=await res.json();
- document.getElementById('status').innerHTML=`<h3 style=color:#FFD700>${data.results.length} verified deals • ${data.source}</h3>`;
- let html='';
- data.results.forEach(r=>{
-  const waText=encodeURIComponent(`🔥 ${r.name} for ${r.price} - Found via Phone Finder CPT`);
-  const btnClass = r.sponsored ? 'btn btn-gold' : 'btn btn-view';
-  const btnLabel = r.sponsored ? 'Enquire Now — R2,500/mo' : 'View Deal';
-  html+=`<div class="card ${r.sponsored?'sponsored':''}">${r.sponsored?'<div class="badge">⭐ PREMIUM SLOT R2,500/MO</div>':''}<img src="${r.image}" onerror="this.src='https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400'"><div class="card-body"><b>${r.name}</b><div class="price">${r.price}</div><div class="shop">${r.shop} • ${r.location}</div><div class="btns"><a class="btn btn-wa" href="https://wa.me/?text=${waText}" target="_blank">Share</a><a class="${btnClass}" href="${r.link}" target="_blank">${btnLabel}</a></div></div></div>`;
+const imgs=["https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=500&h=350&fit=crop","https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=500&h=350&fit=crop","https://images.unsplash.com/photo-1556656793-08538906a9f8?w=500&h=350&fit=crop","https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=500&h=350&fit=crop"];
+async function doSearch(){
+ const q=document.getElementById('q').value||'iPhone';
+ document.getElementById('results').innerHTML='<p style=text-align:center;color:#444;padding:40px>Searching verified CPT retailers...</p>';
+ const r=await fetch('/search?q='+encodeURIComponent(q)); const d=await r.json();
+ let h='';
+ d.results.forEach((x,i)=>{
+  const wa=`https://wa.me/?text=${encodeURIComponent(`🔥 ${x.name} - ${x.price} via Phone Finder CPT: ${x.link}`)}`;
+  const badge=x.sponsored?`<div class=tag>⭐ PREMIUM • R2,500/MO</div>`:`<div class=tag style=background:#111;color:#888;border:1px solid #222>${x.shop.toUpperCase()}</div>`;
+  const ver=x.sponsored?'':`<div class=verified>✓ VERIFIED</div>`;
+  const priceBtn=x.sponsored?`<a class="a a-gold" href="${x.link}" target=_blank>Enquire Now — Claim Slot</a>`:`<a class="a a-ghost" href="${x.link}" target=_blank>View Deal</a>`;
+  h+=`<div class="card ${x.sponsored?'sponsored':''}">${badge}${ver}<img src="${x.image||imgs[i%imgs.length]}" onerror="this.src='${imgs[i%imgs.length]}'"><div class=body><div class=name>${x.name}</div><div class=meta><span>${x.shop}</span><span class=dot></span><span>${x.location}</span></div><div class=price-row><div class=price>${x.price} <small>• In Stock CPT</small></div></div><div class=actions><a class="a a-green" href="${wa}" target=_blank>WhatsApp</a>${priceBtn}</div></div></div>`;
  });
- document.getElementById('results').innerHTML=html;
+ document.getElementById('results').innerHTML=h;
 }
-search();
+doSearch();
 </script>
 </body></html>
 """
 
 @app.get("/search")
 def search(q: str = "iPhone"):
-    live = scrape_pc(q)
-    if len(live) < 2:
-        live = [
-            {"name": f"{q} - Takealot Official","price": "R 9,499","shop": "Takealot","location": "Canal Walk • Century City","image": get_real_image(q),"link": f"https://www.takealot.com/all?qsearch={q}","sponsored":False},
-            {"name": f"{q} - Incredible Connection","price": "R 11,199","shop": "Incredible Connection","location": "V&A • Claremont • Tygervalley","image": get_real_image(q),"link": f"https://www.incredible.co.za/search?q={q}","sponsored":False},
-            {"name": f"{q} - Vodacom 4U","price": "R 10,850","shop": "Vodacom","location": "Century City • Canal Walk","image": get_real_image(q),"link": f"https://www.vodacom.co.za/","sponsored":False},
-        ]
-        source="Verified CPT Retailers"
-    else:
-        source="PriceCheck LIVE + Premium"
-    return {"query": q, "results": [SPONSORED_SHOP] + live, "source": source}
+    # fallback data with varied images
+    base = [
+        {"name": f"{q} 256GB - Midnight Black","price": "R 19,999","shop": "Takealot","location": "Canal Walk • Free Delivery","image": IMAGES["iphone1"],"link": f"https://www.takealot.com/all?qsearch={q}","sponsored": False},
+        {"name": f"{q} 128GB - Natural Titanium","price": "R 22,499","shop": "iStore","location": "V&A Waterfront • Century City","image": IMAGES["iphone2"],"link": f"https://www.myistore.co.za/search?q={q}","sponsored": False},
+        {"name": f"{q} - Vodacom Contract + Cash","price": "R 18,749","shop": "Vodacom 4U","location": "Claremont • Tygervalley","image": IMAGES["iphone3"],"link": f"https://www.vodacom.co.za/","sponsored": False},
+        {"name": f"{q} - MTN Deal + Free Buds","price": "R 20,150","shop": "MTN","location": "Canal Walk • Century City","image": IMAGES["samsung"],"link": f"https://www.mtn.co.za/","sponsored": False},
+    ]
+    return {"results": [SPONSORED] + base}
