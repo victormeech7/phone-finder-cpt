@@ -103,3 +103,31 @@ def search(q: str = "iPhone"):
         {"name": f"{q} - MTN Deal + Free Buds","price": "R 20,150","shop": "MTN","location": "Canal Walk • Century City","image": IMAGES["samsung"],"link": f"https://www.mtn.co.za/","sponsored": False},
     ]
     return {"results": [SPONSORED] + base}
+
+@app.get("/agency", response_class=HTMLResponse)
+def agency():
+    return """
+    <html><head><title>CPT Web Studio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    body{font-family:Inter,sans-serif;max-width:800px;margin:40px auto;padding:20px;line-height:1.6;background:#050507;color:#fff}
+    a.btn{background:#fff;color:#000;padding:14px 22px;text-decoration:none;border-radius:10px;display:inline-block;font-weight:900}
+    .card{border:1px solid #222;padding:20px;border-radius:14px;margin:20px 0;background:#0F0F10}
+    </style>
+    </head><body>
+    <h1>CPT Web Studio — Websites that bring customers</h1>
+    <p>We help Cape Town phone shops & local businesses get more customers from Google.</p>
+    <div class="card">
+    <h2>🚀 PROJECT 1 — LIVE: Phone Finder CPT</h2>
+    <p>The #1 iPhone price comparison in Cape Town — ranks on Google.</p>
+    <p><a href="/">View Live Site → phonefindercpt.co.za</a></p>
+    </div>
+    <div class="card">
+    <h2>📱 PROJECT 2 — DEMO: WeFix Landing</h2>
+    <p>Fast mobile landing page to push WhatsApp leads.</p>
+    </div>
+    <h3>From R2,500 once-off</h3>
+    <a class="btn" href="https://wa.me/27814150336">Chat on WhatsApp</a>
+    <p style="color:#666;margin-top:40px">© CPT Web Studio</p>
+    </body></html>
+    """
