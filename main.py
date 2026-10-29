@@ -103,7 +103,6 @@ def search(q: str = "iPhone"):
         {"name": f"{q} - MTN Deal + Free Buds","price": "R 20,150","shop": "MTN","location": "Canal Walk • Century City","image": IMAGES["samsung"],"link": f"https://www.mtn.co.za/","sponsored": False},
     ]
     return {"results": [SPONSORED] + base}
-
 @app.get("/agency", response_class=HTMLResponse)
 def agency():
     return """
