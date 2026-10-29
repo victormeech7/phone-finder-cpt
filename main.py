@@ -161,7 +161,7 @@ ul{list-style:none;margin:20px 0}ul li{padding:8px 0;font-size:14px;color:var(--
 <h1 class="h1">Websites that <em>bring customers</em> — not just views.</h1>
 <p class="sub">We help Cape Town phone shops & local businesses turn Google searches into WhatsApp messages and walk-ins. No templates. No fluff. Just revenue.</p>
 <div class="btns">
-<a class="btn btn-gold" href="https://wa.me/27648340286?text=Hi%20Victor,%20I%20saw%20CPT%20Web%20Studio%20—%20I%20want%20a%20website%20that%20brings%20customers">Chat on WhatsApp →</a>
+<a class="btn btn-gold" href="https://wa.me/27814150336?text=Hi%20Victor,%20I%20saw%20CPT%20Web%20Studio%20—%20I%20want%20a%20website%20that%20brings%20customers">Chat on WhatsApp →</a>
 <a class="btn btn-dark" href="#work">See live work</a>
 </div>
 <div class="stats">
@@ -198,7 +198,7 @@ ul{list-style:none;margin:20px 0}ul li{padding:8px 0;font-size:14px;color:var(--
 <ul>
 <li>1-page high-converting landing</li><li>WhatsApp + Call buttons</li><li>Google Business setup</li><li>Live in 48 hours</li>
 </ul>
-<a href="https://wa.me/27648340286?text=Starter%20R2500" class="btn btn-dark" style="width:100%;justify-content:center">Get Starter</a>
+<a href="https://wa.me/27814150336?text=Starter%20R2500" class="btn btn-dark" style="width:100%;justify-content:center">Get Starter</a>
 </div>
 
 <div class="price-card featured">
