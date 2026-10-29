@@ -220,5 +220,3 @@ ul{list-style:none;margin:20px 0}ul li{padding:8px 0;font-size:14px;color:var(--
 </body>
 </html>
     """
-
-**Then:**
